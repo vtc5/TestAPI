@@ -1,0 +1,68 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.vm.define "web", primary: true  do |web|
+    #web.vm.box = "ubuntu/trusty64"
+    web.vm.box = "ubuntu/xenial64"
+    web.vm.hostname = "symfony.dev"
+    web.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'" # suppress tty errors workaround
+
+    web.vm.network "forwarded_port", guest: 80, host: 8085
+    web.vm.network "forwarded_port", guest: 3306, host: 23306
+
+    web.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2500"]
+    end
+
+    # initial system upgrade
+    web.vm.provision "shell", inline: 'add-apt-repository -y ppa:ondrej/php'
+    web.vm.provision "shell", inline: 'add-apt-repository -y ppa:ondrej/apache2'
+    web.vm.provision "shell", inline: 'apt-get update && apt-get -y dist-upgrade 2>&1'
+    web.vm.provision "shell", inline: 'apt-get -y autoremove 2>&1'
+
+    # install pacakges required
+    web.vm.provision "shell", inline: 'apt-get install -y mc apache2 2>&1'
+    #web.vm.provision "shell", inline: 'apt-get install -y mc apache2 aptitude 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y php7.2 php7.2-cli libapache2-mod-php7.2 php7.2-curl php7.2-xml php7.2-mysql php7.2-mbstring php7.2-soap 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y php7.2-gd php7.2-xdebug php7.2-intl php7.2-zip php7.2-imap php7.2-gmp phpunit php-apcu php7.2-cli 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y p7zip-rar p7zip-full zip 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y gcc make autoconf libc-dev pkg-config 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y php7.2-dev 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y libmcrypt-dev 2>&1'
+    web.vm.provision "shell", inline: 'pecl install mcrypt-1.0.1 2>&1'
+    web.vm.provision "shell", inline: 'debconf-set-selections <<< "mysql-server mysql-server/root_password password 123456"'
+    web.vm.provision "shell", inline: 'debconf-set-selections <<< "mysql-server mysql-server/root_password_again password 123456"'
+    web.vm.provision "shell", inline: 'apt-get -y install mysql-server'
+    #web.vm.provision "shell", inline: 'sudo DEBIAN_FRONTEND=noninteractive aptitude install -q -y mysql-server-5.7 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y curl git phpunit 2>&1'
+    web.vm.provision "shell", inline: 'curl -s https://getcomposer.org/installer | php'
+    web.vm.provision "shell", inline: 'mv composer.phar /usr/local/bin/composer'
+
+    # put config files in place
+    web.vm.provision "shell", inline: 'cp -rf /vagrant/deploy/apache2 /etc'
+    web.vm.provision "shell", inline: 'cp -rf /vagrant/deploy/php /etc'
+    web.vm.provision "shell", inline: 'cp -rf /vagrant/deploy/mysql /etc'
+
+    # restart services
+    web.vm.provision "shell", inline: 'service apache2 restart'
+    web.vm.provision "shell", inline: 'service mysql restart'
+
+    
+    web.vm.synced_folder ".", "/vagrant", :group => "www-data", :mount_options => ['dmode=775','fmode=664']
+
+    # define shell variables
+    _shell_env = "DB_NAME=symfony DB_USER=root DB_PASS=123456 DB_HOST=localhost"
+    # create main db (if not exists)
+    web.vm.provision "shell", inline: "#{_shell_env} mysql -uroot -p123456 -e 'drop database if exists symfony'"
+    web.vm.provision "shell", inline: "#{_shell_env} mysql -uroot -p123456 -e 'create database symfony'"
+    web.vm.provision "shell", inline: "#{_shell_env} mysql -uroot -p123456 symfony</vagrant/deploy/dump.sql"
+
+    web.vm.provision "shell", inline: 'cat /vagrant/deploy/deploy.sh | tr -d "\r" | /bin/bash 2>&1'
+
+  end
+
+end

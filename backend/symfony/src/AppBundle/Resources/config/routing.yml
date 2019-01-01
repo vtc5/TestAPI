@@ -1,0 +1,60 @@
+app_root:
+    path: /
+    defaults: {_controller: AppBundle:Default:index}
+    methods: [GET]
+
+app_user_list:
+  path: /users
+  defaults: {_controller: AppBundle:User:users}
+  methods: [GET]
+
+app_user_create:
+  path: /users/{id}
+  defaults: {_controller: AppBundle:User:create}
+  methods: [POST]
+
+app_user_update:
+  path: /users/{id}
+  defaults: {_controller: AppBundle:User:update}
+  methods: [PUT]
+
+app_user_delete:
+  path: /users/{id}
+  defaults: {_controller: AppBundle:User:delete}
+  methods: [DELETE]
+
+app_companies_list:
+  path: /companies
+  defaults: {_controller: AppBundle:Company:companies}
+  methods: [GET]
+
+app_company_create:
+  path: /companies/{id}
+  defaults: {_controller: AppBundle:Company:create}
+  methods: [POST]
+
+app_company_update:
+  path: /companies/{id}
+  defaults: {_controller: AppBundle:Company:update}
+  methods: [PUT]
+
+app_company_delete:
+  path: /companies/{id}
+  defaults: {_controller: AppBundle:Company:delete}
+  methods: [DELETE]
+
+app_company_select:
+  path: /companies/select
+  defaults: {_controller: AppBundle:Company:companySelect}
+  methods: [GET]
+
+app_report:
+  path: /report/{month}
+  defaults: {_controller: AppBundle:Other:report}
+  methods: [GET]
+
+app_generate:
+  path: /generate
+  defaults: {_controller: AppBundle:Other:generate}
+  methods: [POST]
+

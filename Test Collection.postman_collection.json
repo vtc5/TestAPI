@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "602e83a6-9bf1-4112-8eab-303f327348ff",
+		"name": "Test Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/generate",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"generate"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "User list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/users",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "User  add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Name\":\"Test User\",\n  \"EMail\":\"lalala@ya.ru\",\n  \"company_id\":31,\n  \"returnList\":true\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/users/0",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"users",
+						"0"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "User  update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Name\":\"Test User\",\n  \"EMail\":\"lalala@ya.ru\",\n  \"company_id\":31,\n  \"returnList\":true\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/users/557",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"users",
+						"557"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "User  delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"returnList\":true\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/users/557",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"users",
+						"557"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "Company list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/companies",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"companies"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "Company create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"Name\":\"Test company\",\n  \"Quota\":15,\n  \"returnList\":true\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/companies/0",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"companies",
+						"0"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "Company update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/companies/56",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"companies",
+						"56"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "Company delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"returnList\":true\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/companies/56",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"companies",
+						"56"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		},
+		{
+			"name": "Report",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8085/report/December",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8085",
+					"path": [
+						"report",
+						"December"
+					]
+				},
+				"description": "Generate"
+			},
+			"response": []
+		}
+	]
+}

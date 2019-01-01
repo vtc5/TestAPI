@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VPN Admin</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/select2.min.css" rel="stylesheet">
+    <link href="css/select2-bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/select2.full.min.js"></script>
+    <script type="text/javascript" src="js/jquery.blockUI.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="container">
+            <h2>Test app</h2>
+        </div>
+        <div id="tab" class="container">
+            <ul class="nav nav-tabs">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#users" data-toggle="tab">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#companies" data-toggle="tab">Companies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#report" data-toggle="tab">Abusers</a>
+                </li>
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="users">
+                    <div class="page-title">
+                        <button class="btn btn-info" id="addUser">Add</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Company</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="usersList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="companies">
+                    <div class="page-title">
+                        <button class="btn btn-info" id="addCompany">Add</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Limit</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="companiesList">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="report">
+                    <div class="page-title">
+                        <button class="btn btn-danger" id="generateTestData">Generate test data</button>
+                        <div style="display: inline-block">
+                            <label for="reportMonth">Month</label>
+                            <select id="reportMonth" class="form-control">
+                                <option>January</option>
+                                <option>February</option>
+                                <option>March</option>
+                                <option>April</option>
+                                <option>May</option>
+                                <option>June</option>
+                                <option>July</option>
+                                <option>August</option>
+                                <option>September</option>
+                                <option>October</option>
+                                <option>November</option>
+                                <option>December</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-info" id="goReport">Go</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Used</th>
+                        </tr>
+                        </thead>
+                        <tbody id="reportList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="userAdd" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User add</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formUserAdd">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userName">Name</label>
+                    <input id="userName" class="form-control" required type="text">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">E-Mail</label>
+                    <input id="userEmail" class="form-control" required type="email">
+                </div>
+                <div class="form-group">
+                    <label for="userCompany">Company</label>
+                    <select class="form-control select2-single" id="userCompany" style="width: 100%" required>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="userEdit" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formUserEdit">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="userNameEdit">Name</label>
+                        <input id="userNameEdit" class="form-control" required type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmailEdit">E-Mail</label>
+                        <input id="userEmailEdit" class="form-control" required type="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="userCompanyEdit">Company</label>
+                        <select class="form-control select2-single" id="userCompanyEdit" style="width: 100%" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="userDelete" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formUserDelete">
+                <div class="modal-body" id="userDeleteQuestion">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="companyAdd" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add company</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formCompanyAdd">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="companyName">Name</label>
+                        <input id="companyName" class="form-control" required type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyLimit">Limit in TB</label>
+                        <input id="companyLimit" class="form-control" required type="number">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="companyEdit" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit company</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formCompanyEdit">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="companyNameEdit">Name</label>
+                        <input id="companyNameEdit" class="form-control" required type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="companyLimitEdit">Limit in TB</label>
+                        <input id="companyLimitEdit" class="form-control" required type="number">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="companyDelete" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Company delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formCompanyDelete">
+                <div class="modal-body" id="companyDeleteQuestion">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="showError" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error happened</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody id="errorMessages">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmGenerate" class="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you want to generate test data?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="generateConfirmed">Generate</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var backendUrl = "http://127.0.0.1:8085/";
+
+        $.ajaxSetup({
+            beforeSend:function(){
+                $.blockUI({
+                    message: '<img src="img/ajax-loader.gif" /> Please wait...',
+                    css: {
+                        padding: '5px',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                    }
+                });
+            },
+            complete:function(){
+                $.unblockUI();
+            }
+        });
+
+        init();
+
+        // Generate data
+        $("#generateTestData").on('click', function (event) {
+            event.preventDefault();
+            $("#confirmGenerate").modal();
+        });
+
+        $("#generateConfirmed").on('click', function (event) {
+            event.preventDefault();
+            $("#confirmGenerate").modal("hide");
+            $.post({
+                url: backendUrl + "generate",
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                init();
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+
+        // User management
+
+        $('#userCompany').select2({
+            theme: "bootstrap",
+            delay: 250,
+            minimumInputLength: 3,
+            ajax: {
+                url: backendUrl + "companies/select",
+                dataType: "json"
+            }
+        });
+
+        $('#userCompanyEdit').select2({
+            theme: "bootstrap",
+            delay: 250,
+            minimumInputLength: 3,
+            ajax: {
+                url: backendUrl + "companies/select",
+                dataType: "json"
+            }
+        });
+
+        $("#addUser").on('click', function (event) {
+            event.preventDefault();
+            $("#userName").val("");
+            $("#userEmail").val("");
+            $("#userCompany").val(null).trigger('change');;
+            $("#userAdd").modal();
+        });
+
+        $("#formUserAdd").submit(function (event) {
+            event.preventDefault();
+            $("#userAdd").modal("hide");
+            var userName = $("#userName").val();
+            var userEmail = $("#userEmail").val();
+            var userCompany = $("#userCompany").val();
+            $.post({
+                url: backendUrl + "users/0",
+                data: JSON.stringify({
+                    Name:userName,
+                    EMail:userEmail,
+                    company_id:userCompany,
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                fillUsers(data.users);
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        $("#formUserEdit").submit(function (event) {
+            event.preventDefault();
+            $("#userEdit").modal("hide");
+            var userName = $("#userNameEdit").val();
+            var userEmail = $("#userEmailEdit").val();
+            var userCompany = $("#userCompanyEdit").val();
+            var userId = $("#userEdit").attr("userId");
+            $.ajax({
+                type: 'PUT',
+                url: backendUrl + "users/"+ userId,
+                data: JSON.stringify({
+                    Name:userName,
+                    EMail:userEmail,
+                    company_id:userCompany,
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillUsers(data.users);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        $("#formUserDelete").submit(function (event) {
+            event.preventDefault();
+            $("#userDelete").modal("hide");
+            var userId = $("#userDelete").attr("userId");
+            $.ajax({
+                type: 'DELETE',
+                url: backendUrl + "users/"+ userId,
+                data: JSON.stringify({
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillUsers(data.users);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        // Company management
+
+        $("#addCompany").on('click', function (event) {
+            event.preventDefault();
+            $("#companyName").val("");
+            $("#companyLimit").val("");
+            $("#companyAdd").modal();
+        });
+
+
+        $("#formCompanyAdd").submit(function (event) {
+            event.preventDefault();
+            $("#companyAdd").modal("hide");
+            var companyName = $("#companyName").val();
+            var companyLimit = $("#companyLimit").val();
+            $.post({
+                url: backendUrl + "companies/0",
+                data: JSON.stringify({
+                    Name:companyName,
+                    Quota:companyLimit,
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillCompanies(data.companies);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        $("#formCompanyEdit").submit(function (event) {
+            event.preventDefault();
+            $("#companyEdit").modal("hide");
+            var companyName = $("#companyNameEdit").val();
+            var companyLimit = $("#companyLimitEdit").val();
+            var companyId = $("#companyEdit").attr("companyId");
+            $.ajax({
+                type: 'PUT',
+                url: backendUrl + "companies/"+ companyId,
+                data: JSON.stringify({
+                    Name:companyName,
+                    Quota:companyLimit,
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillCompanies(data.companies);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        $("#formCompanyDelete").submit(function (event) {
+            event.preventDefault();
+            $("#companyDelete").modal("hide");
+            var companyId = $("#companyDelete").attr("companyId");
+            $.ajax({
+                type: 'DELETE',
+                url: backendUrl + "companies/" + companyId,
+                data: JSON.stringify({
+                    returnList:true
+                }),
+                dataType:"json",
+                contentType: "application/json",
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillCompanies(data.companies);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+        });
+
+        // Report builder
+
+        $("#goReport").on('click', function (event) {
+            event.preventDefault();
+            var month = $("#reportMonth").val();
+            $.getJSON({
+                url: backendUrl + "report/" + month,
+            }).success(function(data) {
+                if (data.errors.length >0) {
+                    showError(data.errors);
+                } else {
+                    fillReport(data.report);
+                }
+            }).fail(function() {
+                alert( "error" );
+            })
+            ;
+        });
+
+        function init() {
+            $.getJSON({
+                url: backendUrl + "users",
+            }).success(function(data) {
+                fillUsers(data);
+            }).fail(function() {
+                alert( "error" );
+            });
+            $.getJSON({
+                url: backendUrl + "companies",
+            }).success(function(data) {
+                fillCompanies(data);
+            }).fail(function() {
+                alert( "error" );
+            });
+        }
+
+        function fillUsers(data) {
+            var userList = $("#usersList");
+            userList.html('');
+            for (i = 0; i < data.length; i++) {
+                var element = "<tr><td>";
+                element += data[i].name +"</td><td>";
+                element += data[i].email +"</td><td class='companyName'>";
+                element += data[i].companyName +"</td><td>";
+                element += "<td>" +
+                    "<button class=\"btn btn-primary btn-userEdit\" userId="+data[i].id+" companyId="+data[i].companyid+">Edit</button>" +
+                    "<button class=\"btn btn-danger btn-userDelete\" userId="+data[i].id+">Delete</button>" +
+                    "</td></tr>";
+                userList.append(element);
+            }
+            $(".btn-userEdit").on('click', function (event) {
+                event.preventDefault();
+                var btn = event.target;
+                var userId = btn.getAttribute("userId");
+                var companyId = btn.getAttribute("companyId");
+                var userName = btn.parentElement.parentElement.children[0].innerHTML;
+                var userEmail = btn.parentElement.parentElement.children[1].innerHTML;
+                var userComnpanyName = btn.parentElement.parentElement.children[2].innerHTML;
+                $("#userNameEdit").val(userName);
+                $("#userEmailEdit").val(userEmail);
+                var selectUserCompanyEdit = $("#userCompanyEdit");
+                if (!selectUserCompanyEdit.find("option[value='" + companyId + "']").length) {
+                    var newOption = new Option(userComnpanyName, companyId, false, false);
+                    selectUserCompanyEdit.append(newOption).trigger('change');
+                }
+                selectUserCompanyEdit.val(companyId).trigger('change');
+                $("#userEdit").attr("userId", userId);
+                $("#userEdit").modal();
+            });
+            $(".btn-userDelete").on('click', function (event) {
+                event.preventDefault();
+                var btn = event.target;
+                var userId = btn.getAttribute("userId");
+                var userName = btn.parentElement.parentElement.children[0].innerHTML;
+                $("#userDeleteQuestion").html("Do you wish to delete  "+userName+"?");
+                $("#userDelete").attr("userId", userId);
+                $("#userDelete").modal();
+            });
+        }
+
+
+        function fillCompanies(data) {
+            var userList = $("#companiesList");
+            userList.html('');
+            for (i = 0; i < data.length; i++) {
+                var element = "<tr><td>";
+                element += data[i].name +"</td><td>";
+                element += data[i].quota +"TB</td><td>";
+                element += "<td>" +
+                    "<button class=\"btn btn-primary btn-companyEdit\" companyId="+data[i].id+">Edit</button>" +
+                    "<button class=\"btn btn-danger btn-companyDelete\" companyId="+data[i].id+">Delete</button>" +
+                    "</td></tr>";
+                userList.append(element);
+            }
+            $(".btn-companyEdit").on('click', function (event) {
+                event.preventDefault();
+                var btn = event.target;
+                var companyId = btn.getAttribute("companyId");
+                var companyName = btn.parentElement.parentElement.children[0].innerHTML;
+                var companyLimit = btn.parentElement.parentElement.children[1].innerHTML;
+                companyLimit = companyLimit.replace('TB','');
+                $("#companyNameEdit").val(companyName);
+                $("#companyLimitEdit").val(companyLimit);
+                $("#companyEdit").attr("companyId", companyId);
+                $("#companyEdit").modal();
+            });
+            $(".btn-companyDelete").on('click', function (event) {
+                event.preventDefault();
+                var btn = event.target;
+                var companyId = btn.getAttribute("companyId");
+                var companyName = btn.parentElement.parentElement.children[0].innerHTML;
+                $("#companyDeleteQuestion").html("Do you wish to delete  "+companyName+"?");
+                $("#companyDelete").attr("companyId", companyId);
+                $("#companyDelete").modal();
+            });
+        }
+
+        function fillReport(data) {
+            var userList = $("#reportList");
+            userList.html('');
+            data.forEach(function(item, i, arr) {
+                var element = "<tr><td>";
+                element += item.name +"</td><td>";
+                element += item.quota +"TB ("+item.transfered+"TB)</td></tr>";
+                userList.append(element);
+            });
+        }
+
+        function showError(data) {
+            var errorMessage = $("#errorMessages");
+            errorMessage.html('');
+            for (i = 0; i < data.length; i++) {
+                var element = "<tr><td>";
+                element += data[i].code +"</td><td>";
+                element += data[i].message +"</td></tr>";
+                errorMessage.append(element);
+            }
+            $("#showError").modal();
+        }
+    });
+</script>
+</body>
+</html>

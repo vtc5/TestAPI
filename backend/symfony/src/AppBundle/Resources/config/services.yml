@@ -1,0 +1,27 @@
+services:
+
+    user_service:
+      class: AppBundle\Services\UserService
+      arguments:
+        - "@doctrine"
+
+    company_service:
+      class: AppBundle\Services\CompanyService
+      arguments:
+        - "@doctrine"
+
+    report_service:
+      class: AppBundle\Services\ReportService
+      arguments:
+        - "@doctrine"
+
+    generator_service:
+      class: AppBundle\Services\GeneratorService
+      arguments:
+        - "@doctrine"
+        - "@faker.generator"
+
+    app.doctrine.update:
+      class: AppBundle\EventListener\UpdateListener
+      tags:
+        - { name: doctrine.event_listener, event: preUpdate }
