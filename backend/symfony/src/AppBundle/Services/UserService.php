@@ -8,6 +8,7 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Company;
 use AppBundle\Entity\User;
 
 class UserService extends BaseService
@@ -27,6 +28,28 @@ class UserService extends BaseService
     }
     return $userList;
   }
+
+  public function getUser($id) {
+    $user = $this->em->getRepository('AppBundle:User')
+      ->findOneBy(array('id'=>$id));
+    if (empty($user)) {
+      $user = new User();
+      $user->setId(null);
+    }
+    $userRecord = new \stdClass();
+    $userRecord->id = $user->getId();
+    $userRecord->name = $user->getName();
+    $userRecord->email = $user->getEmail();
+    if ($user->getCompany() instanceof Company) {
+      $userRecord->companyName = $user->getCompany()->getName();
+      $userRecord->companyid = $user->getCompany()->getId();
+    } else {
+      $userRecord->companyName = '';
+      $userRecord->companyid = null;
+    }
+    return $userRecord;
+  }
+
 
   public function createUser($object, $id) {
     $this->checkUser($object);

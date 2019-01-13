@@ -8,6 +8,11 @@ app_user_list:
   defaults: {_controller: AppBundle:User:users}
   methods: [GET]
 
+app_user_get:
+  path: /users/{id}
+  defaults: {_controller: AppBundle:User:user}
+  methods: [GET]
+
 app_user_create:
   path: /users/{id}
   defaults: {_controller: AppBundle:User:create}
@@ -28,6 +33,11 @@ app_companies_list:
   defaults: {_controller: AppBundle:Company:companies}
   methods: [GET]
 
+app_company_get:
+  path: /company/{id}
+  defaults: {_controller: AppBundle:Company:company}
+  methods: [GET]
+
 app_company_create:
   path: /companies/{id}
   defaults: {_controller: AppBundle:Company:create}
@@ -46,6 +56,11 @@ app_company_delete:
 app_company_select:
   path: /companies/select
   defaults: {_controller: AppBundle:Company:companySelect}
+  methods: [GET]
+
+app_company_select_vue:
+  path: /companies/select_vue
+  defaults: {_controller: AppBundle:Company:companySelectVue}
   methods: [GET]
 
 app_report:

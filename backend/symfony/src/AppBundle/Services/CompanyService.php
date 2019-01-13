@@ -27,6 +27,20 @@ class CompanyService extends BaseService
     return $companiesList;
   }
 
+  public function getCompany($id) {
+    $company = $this->em->getRepository('AppBundle:Company')
+      ->findOneBy(array('id'=>$id));
+    if (empty($company)) {
+      $company = new Company();
+      $company->setId(null);
+    }
+    $companyRecord = new \stdClass();
+    $companyRecord->id = $company->getId();
+    $companyRecord->name = $company->getName();
+    $companyRecord->quota = $company->getQuota()/(1024*1024*1024);
+    return $companyRecord;
+  }
+
   public function createCompany($object, $id) {
     $this->checkCompany($object);
     $response = array();
@@ -126,6 +140,33 @@ class CompanyService extends BaseService
       $companies[] = array(
         'id' => $entity['id'],
         'text' => $entity['name']
+      );
+    }
+    return array(
+      'results'=>$companies,
+      'pagination'=>array(
+        'more'=>false
+      )
+    );
+  }
+
+  public function companySelectVue($term, $limit, $page) {
+    $query = $this->em->getConnection()->prepare("
+        select id, name
+        from companies
+        where name LIKE :search
+        LIMIT 25 
+      ");
+    $query->bindValue('search', '%'.$term.'%');
+    $query->execute();
+    $entities = $query->fetchAll();
+
+    $companies = array();
+    foreach ($entities as $entity)
+    {
+      $companies[] = array(
+        'value' => $entity['id'],
+        'label' => $entity['name']
       );
     }
     return array(

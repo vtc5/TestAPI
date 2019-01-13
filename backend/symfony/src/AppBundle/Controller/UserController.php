@@ -19,6 +19,11 @@ class UserController extends Controller
     return new JsonResponse($service->getUsers());
   }
 
+  public function userAction(Request $request, $id) {
+    $service = $this->get('user_service');
+    return new JsonResponse($service->getUser($id));
+  }
+
   public function createAction(Request $request, $id = 0) {
     $object = json_decode($request->getContent());
     if (!is_object($object)) {

@@ -19,6 +19,11 @@ class CompanyController extends Controller
     return new JsonResponse($service->getCompanies());
   }
 
+  public function companyAction(Request $request, $id) {
+    $service = $this->get('company_service');
+    return new JsonResponse($service->getCompany($id));
+  }
+
   public function createAction(Request $request, $id = 0) {
     $object = json_decode($request->getContent());
     if (!is_object($object)) {
@@ -65,6 +70,17 @@ class CompanyController extends Controller
 
     $service = $this->get('company_service');
     $companiesList = $service->companySelect($term, $limit, $page);
+    return  new JsonResponse($companiesList);
+  }
+
+  // for select2 vue
+  public function companySelectVueAction(Request $request) {
+    $term = trim(strip_tags($request->get('term')));
+    $limit = 0 + trim(strip_tags($request->get('maxRows')));
+    $page = trim(strip_tags($request->get('page')));
+
+    $service = $this->get('company_service');
+    $companiesList = $service->companySelectVue($term, $limit, $page);
     return  new JsonResponse($companiesList);
   }
 

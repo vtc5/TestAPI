@@ -55,6 +55,7 @@ class Company
   public function __construct()
   {
     $this->users = new ArrayCollection();
+    $this->quota = 0;
     $this->created = new \DateTime();
     $this->updated = new \DateTime();
   }
