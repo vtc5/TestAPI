@@ -1,6 +1,7 @@
 <template>
     <div class="company">
         <div v-esc="escape"></div>
+        <LoadingIndicator v-bind:loading="loading"></LoadingIndicator>
         <section v-if="isEditCompany">
             <h1>Edit company</h1>
             <section v-if="loading">
@@ -67,10 +68,12 @@
 <script>
     import axios from 'axios'
     import ShowErrors from '@/components/showErrors'
+    import LoadingIndicator from "../components/loadingIndicator";
 
     export default {
         name: 'CompanyEdit',
         components: {
+            LoadingIndicator,
             ShowErrors
         },
         data() {

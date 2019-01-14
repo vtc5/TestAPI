@@ -3,12 +3,13 @@
         <!--<input type="text" v-on:input="setMessage" />-->
         <!--<h1>This is an page3 </h1>-->
         <!--<h1>{{  msg }} </h1>-->
+        <LoadingIndicator v-bind:loading="loading"></LoadingIndicator>
         <h1>Companies</h1>
         <section v-if="errored">
             <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
         </section>
         <section v-else>
-            <div v-if="loading">Loading...</div>
+            <div v-if="loading"></div>
             <table class="table" v-else>
                 <thead>
                 <tr>
@@ -34,14 +35,19 @@
 
 <script>
     import axios from 'axios'
+    import loadingImage from '../assets/ajax-loader.gif';
+    import LoadingIndicator from "../components/loadingIndicator";
     export default {
         name: 'Companies',
+        components: {LoadingIndicator},
         data() {
             return {
                 companies: null,
                 loading: true,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/'
+                endpoint: 'http://127.0.0.1:8085/',
+                IndicatorMessage:"Loading...",
+                image:loadingImage
             }
         },
         created() {

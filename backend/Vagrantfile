@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     web.vm.network "forwarded_port", guest: 3306, host: 23306
 
     web.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "2500"]
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     # initial system upgrade

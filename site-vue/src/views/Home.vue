@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <LoadingIndicator v-bind:loading="loading"></LoadingIndicator>
     <div style="display: inline-block;">
       <label for="reportMonth">Month</label>
       <v-select style="width: 200px; margin-right: 20px" id="reportMonth" v-model="selectedMonth" :options="months"></v-select>
@@ -23,13 +24,15 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from 'axios';
+  import LoadingIndicator from "../components/loadingIndicator";
   export default {
     name: 'Home',
+    components: {LoadingIndicator},
     data() {
       return {
         reportLines: [],
-        loading: true,
+        loading: false,
         errored: false,
         months: [
                 'January',
@@ -57,6 +60,7 @@
         if (this.selectedMonth == null) {
           return;
         }
+        this.loading = true;
         axios.get(this.endpoint+"report/"+this.selectedMonth)
                 .then(response => {
                   this.reportLines = response.data.report;

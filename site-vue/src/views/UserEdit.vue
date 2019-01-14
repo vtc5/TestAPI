@@ -1,10 +1,10 @@
 <template>
     <div class="company">
         <div v-esc="escape"></div>
+        <LoadingIndicator v-bind:loading="loading"></LoadingIndicator>
         <section v-if="isEditUser">
             <h1>Edit user</h1>
             <section v-if="loading">
-                Loading user....
             </section>
             <section v-else>
                 <section v-if="errored">
@@ -75,10 +75,12 @@
     import axios from 'axios'
     import { debounce } from "debounce";
     import ShowErrors from '@/components/showErrors'
+    import LoadingIndicator from "../components/loadingIndicator";
 
     export default {
         name: 'UserEdit',
         components: {
+            LoadingIndicator,
             ShowErrors
         },
         data() {

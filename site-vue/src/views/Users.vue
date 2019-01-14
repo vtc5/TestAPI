@@ -1,5 +1,6 @@
 <template>
     <div class="users">
+        <LoadingIndicator v-bind:loading="loading"></LoadingIndicator>
         <h1>Users</h1>
         <section v-if="errored">
             <p>We're sorry, we're not able to retrieve this information at the moment, please try back later</p>
@@ -32,9 +33,11 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
+    import LoadingIndicator from "../components/loadingIndicator";
     export default {
         name: 'Users',
+        components: {LoadingIndicator},
         data() {
             return {
                 users: null,
