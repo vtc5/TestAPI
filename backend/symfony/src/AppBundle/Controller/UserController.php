@@ -10,21 +10,37 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
 
   public function usersAction(Request $request) {
+    $key = $request->query->get('key');
     $service = $this->get('user_service');
-    return new JsonResponse($service->getUsers());
+    $ret = $service->getUsers($key);
+    if (is_null($ret)) {
+      $response = new Response('Error');
+      $response->setStatusCode(400);
+      return $response;
+    }
+    return new JsonResponse($ret);
   }
 
   public function userAction(Request $request, $id) {
+    $key = $request->query->get('key');
     $service = $this->get('user_service');
-    return new JsonResponse($service->getUser($id));
+    $ret = $service->getUser($key, $id);
+    if (is_null($ret)) {
+      $response = new Response('Error');
+      $response->setStatusCode(400);
+      return $response;
+    }
+    return new JsonResponse($ret);
   }
 
   public function createAction(Request $request, $id = 0) {
+    $key = $request->query->get('key');
     $object = json_decode($request->getContent());
     if (!is_object($object)) {
       return new JsonResponse(array(
@@ -35,11 +51,17 @@ class UserController extends Controller
       ));
     }
     $service = $this->get('user_service');
-    $ret = $service->createUser($object, $id);
+    $ret = $service->createUser($key, $object, $id);
+    if (is_null($ret)) {
+      $response = new Response('Error');
+      $response->setStatusCode(400);
+      return $response;
+    }
     return new JsonResponse($ret);
   }
 
   public function updateAction(Request $request, $id) {
+    $key = $request->query->get('key');
     $object = json_decode($request->getContent());
     if (!is_object($object)) {
       return new JsonResponse(array(
@@ -50,14 +72,25 @@ class UserController extends Controller
       ));
     }
     $service = $this->get('user_service');
-    $ret = $service->updateUser($object, $id);
+    $ret = $service->updateUser($key, $object, $id);
+    if (is_null($ret)) {
+      $response = new Response('Error');
+      $response->setStatusCode(400);
+      return $response;
+    }
     return new JsonResponse($ret);
   }
 
   public function deleteAction(Request $request, $id) {
+    $key = $request->query->get('key');
     $service = $this->get('user_service');
     $object = json_decode($request->getContent());
-    $ret = $service->deleteUser($object, $id);
+    $ret = $service->deleteUser($key, $object, $id);
+    if (is_null($ret)) {
+      $response = new Response('Error');
+      $response->setStatusCode(400);
+      return $response;
+    }
     return new JsonResponse($ret);
   }
 

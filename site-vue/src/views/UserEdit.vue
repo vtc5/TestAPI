@@ -89,7 +89,6 @@
                 isEditUser: true,
                 loading: true,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/',
                 userId: null,
                 userName: '',
                 userEMail: '',
@@ -114,8 +113,13 @@
                 if (id == null) {
                     this.errored = true;
                 } else {
-                    axios.get(this.endpoint+'users/'+id)
-                        .then(response => {
+                    axios.get(this.$getServerAddress()+'users/'+id,
+                        {
+                            params: {
+                                key: this.$getAuthKey(),
+                            }
+                        }
+                    ).then(response => {
                             this.userId = response.data.id;
                             this.userName = response.data.name;
                             this.userEMail = response.data.email;
@@ -144,12 +148,17 @@
                 }
             },
             userSave() {
-                axios.put(this.endpoint+'users/'+this.userId,
-                    JSON.stringify({
-                            Name:this.userName,
-                            EMail:this.userEMail,
-                            company_id: this.companySelected.value
-                        })
+                axios.put(this.$getServerAddress()+'users/'+this.userId,
+                        JSON.stringify({
+                                    Name:this.userName,
+                                    EMail:this.userEMail,
+                                    company_id: this.companySelected.value
+                        }),
+                        {
+                            params: {
+                                key: this.$getAuthKey(),
+                            }
+                        }
                 ).then(response =>{
                     if (response.data.errors.length == 0) {
                         this.$router.push({
@@ -169,8 +178,12 @@
                 ;
             },
             userDelete() {
-                axios.delete(
-                    this.endpoint+'users/'+this.companyId, null
+                axios.delete(this.$getServerAddress()+'users/'+this.userId,
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
                 ).then(response =>{
                     if (response.data.errors.length == 0) {
                         this.$router.push({
@@ -200,7 +213,7 @@
             },
             onSearch(search, loading) {
                 if (search.length > 2) {
-                    this.searchElement(this.endpoint, loading, search, this);
+                    this.searchElement(this.$getServerAddress(), loading, search, this);
                 }
             },
             searchElement: debounce((endpoint, loading, search, vm) => {
@@ -209,6 +222,7 @@
                     endpoint + 'companies/select_vue',
                     {
                         params: {
+                            key:this.$getAuthKey(),
                             term:search,
                             maxRows:100,
                             page:1

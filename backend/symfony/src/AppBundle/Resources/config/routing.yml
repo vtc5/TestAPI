@@ -73,3 +73,17 @@ app_generate:
   defaults: {_controller: AppBundle:Other:generate}
   methods: [POST]
 
+app_login:
+  path: /login
+  defaults: {_controller: AppBundle:Auth:auth}
+  methods: [POST]
+
+app_login_check:
+  path: /login_check
+  defaults: {_controller: AppBundle:Auth:check}
+  methods: [POST]
+
+app_logout:
+  path: /logout
+  defaults: {_controller: AppBundle:Auth:logout}
+  methods: [POST]

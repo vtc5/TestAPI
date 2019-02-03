@@ -12,6 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     web.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'" # suppress tty errors workaround
 
     web.vm.network "forwarded_port", guest: 80, host: 8085
+    web.vm.network "forwarded_port", guest: 8000, host: 8086
     web.vm.network "forwarded_port", guest: 3306, host: 23306
 
     web.vm.provider "virtualbox" do |vb|
@@ -32,7 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     web.vm.provision "shell", inline: 'apt-get install -y p7zip-rar p7zip-full zip 2>&1'
     web.vm.provision "shell", inline: 'apt-get install -y gcc make autoconf libc-dev pkg-config 2>&1'
     web.vm.provision "shell", inline: 'apt-get install -y php7.2-dev 2>&1'
-    web.vm.provision "shell", inline: 'apt-get install -y libmcrypt-dev 2>&1'
+    web.vm.provision "shell", inline: 'apt-get install -y libmcrypt-dev libevent-dev 2>&1'
     web.vm.provision "shell", inline: 'pecl install mcrypt-1.0.1 2>&1'
     web.vm.provision "shell", inline: 'debconf-set-selections <<< "mysql-server mysql-server/root_password password 123456"'
     web.vm.provision "shell", inline: 'debconf-set-selections <<< "mysql-server mysql-server/root_password_again password 123456"'

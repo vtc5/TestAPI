@@ -40,25 +40,36 @@
     export default {
         name: 'Companies',
         components: {LoadingIndicator},
+        mounted() {
+            this.$socket.onmessage = (data)=>{
+                console.log(data.data);
+            };
+        },
         data() {
             return {
                 companies: null,
                 loading: true,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/',
                 IndicatorMessage:"Loading...",
                 image:loadingImage
             }
         },
         created() {
             this.getAllCompanies();
+            this.$connect();
         },
         methods: {
             setMessage: function (event) {
                 this.msg = event.target.value;
             },
             getAllCompanies() {
-                axios.get(this.endpoint+'companies')
+                axios.get(this.$getServerAddress()+'companies',
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
+                )
                     .then(response => {
                         this.companies = response.data;
                     })

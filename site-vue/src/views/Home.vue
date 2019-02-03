@@ -29,27 +29,26 @@
   export default {
     name: 'Home',
     components: {LoadingIndicator},
-    data() {
+    data: function () {
       return {
         reportLines: [],
         loading: false,
         errored: false,
         months: [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December'
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December'
         ],
-        selectedMonth:null,
-        endpoint: 'http://127.0.0.1:8085/'
+        selectedMonth: null
       }
     },
     methods: {
@@ -61,8 +60,13 @@
           return;
         }
         this.loading = true;
-        axios.get(this.endpoint+"report/"+this.selectedMonth)
-                .then(response => {
+        axios.get(this.$getServerAddress()+"report/"+this.selectedMonth,
+                {
+                  params: {
+                    key: this.$getAuthKey(),
+                  }
+                }
+              ).then(response => {
                   this.reportLines = response.data.report;
                 })
                 .catch(error => {

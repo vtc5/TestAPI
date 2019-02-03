@@ -43,18 +43,24 @@
                 users: null,
                 loading: true,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/'
             }
         },
         created() {
             this.getAllUsers();
+            console.log(this.$getServerAddress());
         },
         methods: {
             setMessage: function (event) {
                 this.msg = event.target.value;
             },
             getAllUsers() {
-                axios.get(this.endpoint+'users')
+                axios.get(this.$getServerAddress()+'users',
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
+                )
                     .then(response => {
                         this.users = response.data;
                     })

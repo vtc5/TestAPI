@@ -10,11 +10,10 @@
     export default {
         name: 'Generate',
         components: {LoadingIndicator},
-        data() {
+        data: function () {
             return {
                 loading: false,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/'
             }
         },
         methods: {
@@ -23,7 +22,13 @@
             },
             generate() {
                 this.loading = true;
-                axios.post(this.endpoint+'generate')
+                axios.post(this.$getServerAddress()+'generate', null,
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
+                )
                     .then(response => {
                         this.$router.push({
                             path:'/'

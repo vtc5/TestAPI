@@ -82,7 +82,6 @@
                 isEditCompany: true,
                 loading: true,
                 errored: false,
-                endpoint: 'http://127.0.0.1:8085/',
                 companyId: null,
                 companyName: '',
                 companyLimit: 0,
@@ -101,7 +100,13 @@
                     this.errored = true;
                     this.message = 'User doesn\'t exit';
                 } else {
-                    axios.get(this.endpoint+'company/'+id)
+                    axios.get(this.$getServerAddress()+'company/'+id,
+                        {
+                            params: {
+                                key: this.$getAuthKey(),
+                            }
+                        }
+                    )
                         .then(response => {
                             this.companyId = response.data.id;
                             this.companyName = response.data.name;
@@ -126,11 +131,16 @@
                 }
             },
             companySave() {
-                axios.put(this.endpoint+'companies/'+this.companyId,
+                axios.put(this.$getServerAddress()+'companies/'+this.companyId,
                     JSON.stringify({
                             Name:this.companyName,
                             Quota:this.companyLimit
-                        })
+                        }),
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
                 ).then(response =>{
                     if (response.data.errors.length == 0) {
                         this.$router.push({
@@ -151,7 +161,12 @@
             },
             companyDelete() {
                 axios.delete(
-                    this.endpoint+'companies/'+this.companyId, null
+                    this.$getServerAddress()+'companies/'+this.companyId,
+                    {
+                        params: {
+                            key: this.$getAuthKey(),
+                        }
+                    }
                 ).then(response =>{
                     if (response.data.errors.length == 0) {
                         this.$router.push({

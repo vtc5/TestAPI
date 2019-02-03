@@ -8,141 +8,162 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Admin;
 use AppBundle\Entity\Company;
 use AppBundle\Entity\User;
 
 class UserService extends BaseService
 {
 
-  public function getUsers() {
-    $userList = array();
-    $users = $this->em->getRepository('AppBundle:User')->findAll();
-    foreach ($users as $user) {
+  public function getUsers($key) {
+    $admin = $this->adminService->authenticateBySession($key);
+    if ($admin instanceof Admin) {
+      $userList = array();
+      $users = $this->em->getRepository('AppBundle:User')->findAll();
+      foreach ($users as $user) {
+        $userRecord = new \stdClass();
+        $userRecord->id = $user->getId();
+        $userRecord->name = $user->getName();
+        $userRecord->email = $user->getEmail();
+        $userRecord->companyName = $user->getCompany()->getName();
+        $userRecord->companyid = $user->getCompany()->getId();
+        $userList[] = $userRecord;
+      }
+      return $userList;
+    }
+    return null;
+  }
+
+  public function getUser($key, $id) {
+    $admin = $this->adminService->authenticateBySession($key);
+    if ($admin instanceof Admin) {
+      $user = $this->em->getRepository('AppBundle:User')
+        ->findOneBy(array('id'=>$id));
+      if (empty($user)) {
+        $user = new User();
+        $user->setId(null);
+      }
       $userRecord = new \stdClass();
       $userRecord->id = $user->getId();
       $userRecord->name = $user->getName();
       $userRecord->email = $user->getEmail();
-      $userRecord->companyName = $user->getCompany()->getName();
-      $userRecord->companyid = $user->getCompany()->getId();
-      $userList[] = $userRecord;
+      if ($user->getCompany() instanceof Company) {
+        $userRecord->companyName = $user->getCompany()->getName();
+        $userRecord->companyid = $user->getCompany()->getId();
+      } else {
+        $userRecord->companyName = '';
+        $userRecord->companyid = null;
+      }
+      return $userRecord;
     }
-    return $userList;
-  }
-
-  public function getUser($id) {
-    $user = $this->em->getRepository('AppBundle:User')
-      ->findOneBy(array('id'=>$id));
-    if (empty($user)) {
-      $user = new User();
-      $user->setId(null);
-    }
-    $userRecord = new \stdClass();
-    $userRecord->id = $user->getId();
-    $userRecord->name = $user->getName();
-    $userRecord->email = $user->getEmail();
-    if ($user->getCompany() instanceof Company) {
-      $userRecord->companyName = $user->getCompany()->getName();
-      $userRecord->companyid = $user->getCompany()->getId();
-    } else {
-      $userRecord->companyName = '';
-      $userRecord->companyid = null;
-    }
-    return $userRecord;
+    return null;
   }
 
 
-  public function createUser($object, $id) {
-    $this->checkUser($object);
-    $response = array();
-    if (empty($this->errors)) {
-      $user = new User();
-      if (!empty($id)) {
-        $user->setId($id);
-      }
-      $user->setName($object->Name);
-      $user->setEmail($object->EMail);
-      $company = $this->em->getRepository('AppBundle:Company')
-        ->findOneBy(array(
-          'id'=>$object->company_id
-        ));
-      if (empty($company)) {
-        $this->createError(7,'Company with id '.$object->company_id." doesn't exist");
-      }
-      $user->setCompany($company);
-      $this->em->persist($user);
-      if (empty($this->errors)){
-        try {
-          $this->em->flush();
-        } catch (\Exception $exception) {
-          $this->createError($exception->getCode(), $exception->getMessage());
+  public function createUser($key, $object, $id) {
+    $admin = $this->adminService->authenticateBySession($key);
+    if ($admin instanceof Admin) {
+      $this->checkUser($object);
+      $response = array();
+      if (empty($this->errors)) {
+        $user = new User();
+        if (!empty($id)) {
+          $user->setId($id);
+        }
+        $user->setName($object->Name);
+        $user->setEmail($object->EMail);
+        $company = $this->em->getRepository('AppBundle:Company')
+          ->findOneBy(array(
+            'id'=>$object->company_id
+          ));
+        if (empty($company)) {
+          $this->createError(7,'Company with id '.$object->company_id." doesn't exist");
+        }
+        $user->setCompany($company);
+        $this->em->persist($user);
+        if (empty($this->errors)){
+          try {
+            $this->em->flush();
+          } catch (\Exception $exception) {
+            $this->createError($exception->getCode(), $exception->getMessage());
+          }
         }
       }
+      $response['errors']=$this->errors;
+      $response = $this->returnUsers($response, $object);
+      return $response;
     }
-    $response['errors']=$this->errors;
-    $response = $this->returnUsers($response, $object);
-    return $response;
+    return null;
   }
 
-  public function updateUser($object, $id) {
-    $this->checkUser($object);
-    $response = array();
-    if (empty($this->errors)) {
+  public function updateUser($key, $object, $id) {
+    $admin = $this->adminService->authenticateBySession($key);
+    if ($admin instanceof Admin) {
+      $this->checkUser($object);
+      $response = array();
+      if (empty($this->errors)) {
+        $user = $this->em->getRepository('AppBundle:User')
+          ->findOneBy(array(
+            'id'=>$id
+          ));
+        if (empty($user)) {
+          $this->createError(8,'User woth id '.$id." doesn't exist");
+        }
+        $company = $this->em->getRepository('AppBundle:Company')
+          ->findOneBy(array(
+            'id'=>$object->company_id
+          ));
+        if (empty($company)) {
+          $this->createError(9,'Company woth id '.$object->company_id." doesn't exist");
+        }
+        if (empty($this->errors)){
+          $user->setName($object->Name);
+          $user->setEmail($object->EMail);
+          $user->setCompany($company);
+          $this->em->persist($user);
+          try {
+            $this->em->flush();
+          } catch (\Exception $exception) {
+            $this->createError($exception->getCode(), $exception->getMessage());
+          }
+        }
+      }
+      $response['errors']=$this->errors;
+      $response = $this->returnUsers($response, $object);
+      return $response;
+    }
+    return null;
+  }
+
+  public function deleteUser($key, $object, $id) {
+    $admin = $this->adminService->authenticateBySession($key);
+    if ($admin instanceof Admin) {
+      $response = array();
       $user = $this->em->getRepository('AppBundle:User')
         ->findOneBy(array(
           'id'=>$id
         ));
       if (empty($user)) {
-        $this->createError(8,'User woth id '.$id." doesn't exist");
+        $this->createError(10,'User woth id '.$id." doesn't exist");
       }
-      $company = $this->em->getRepository('AppBundle:Company')
-        ->findOneBy(array(
-          'id'=>$object->company_id
-        ));
-      if (empty($company)) {
-        $this->createError(9,'Company woth id '.$object->company_id." doesn't exist");
-      }
-      if (empty($this->errors)){
-        $user->setName($object->Name);
-        $user->setEmail($object->EMail);
-        $user->setCompany($company);
-        $this->em->persist($user);
+      if (empty($this->errors)) {
+        $transfers = $this->em->getRepository('AppBundle:TransferLog')
+          ->findBy(array('user'=>$user));
+        foreach ($transfers as $transfer) {
+          $this->em->remove($transfer);
+        }
+        $this->em->remove($user);
         try {
           $this->em->flush();
         } catch (\Exception $exception) {
           $this->createError($exception->getCode(), $exception->getMessage());
         }
       }
+      $response['errors']=$this->errors;
+      $response = $this->returnUsers($response, $object);
+      return $response;
     }
-    $response['errors']=$this->errors;
-    $response = $this->returnUsers($response, $object);
-    return $response;
-  }
-
-  public function deleteUser($object, $id) {
-    $response = array();
-    $user = $this->em->getRepository('AppBundle:User')
-      ->findOneBy(array(
-        'id'=>$id
-      ));
-    if (empty($user)) {
-      $this->createError(10,'User woth id '.$id." doesn't exist");
-    }
-    if (empty($this->errors)) {
-      $transfers = $this->em->getRepository('AppBundle:TransferLog')
-        ->findBy(array('user'=>$user));
-      foreach ($transfers as $transfer) {
-        $this->em->remove($transfer);
-      }
-      $this->em->remove($user);
-      try {
-        $this->em->flush();
-      } catch (\Exception $exception) {
-        $this->createError($exception->getCode(), $exception->getMessage());
-      }
-    }
-    $response['errors']=$this->errors;
-    $response = $this->returnUsers($response, $object);
-    return $response;
+    return null;
   }
 
   protected function returnUsers(array $response, $object) {

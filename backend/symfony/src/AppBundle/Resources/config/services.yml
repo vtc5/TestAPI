@@ -4,22 +4,31 @@ services:
       class: AppBundle\Services\UserService
       arguments:
         - "@doctrine"
+        - "@admins_service"
 
     company_service:
       class: AppBundle\Services\CompanyService
       arguments:
         - "@doctrine"
+        - "@admins_service"
 
     report_service:
       class: AppBundle\Services\ReportService
       arguments:
         - "@doctrine"
+        - "@admins_service"
 
     generator_service:
       class: AppBundle\Services\GeneratorService
       arguments:
         - "@doctrine"
+        - "@admins_service"
         - "@faker.generator"
+
+    admins_service:
+      class: AppBundle\Services\AdminsService
+      arguments:
+        - "@doctrine"
 
     app.doctrine.update:
       class: AppBundle\EventListener\UpdateListener

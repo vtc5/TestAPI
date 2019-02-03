@@ -13,6 +13,10 @@ use Doctrine\ORM\EntityManager;
 
 class BaseService
 {
+
+  /** @var AdminsService $adminService */
+  protected $adminService;
+
   /** @var EntityManager $em */
   protected $em;
 
@@ -22,9 +26,10 @@ class BaseService
    * UserService constructor.
    * @param $em
    */
-  public function __construct($em)
+  public function __construct($em, $adminService)
   {
     $this->em = $em->getEntityManager();
+    $this->adminService = $adminService;
   }
 
   protected function createError($code, $message) {
